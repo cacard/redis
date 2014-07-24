@@ -31,17 +31,18 @@
 #ifndef __SDS_H
 #define __SDS_H
 
-#define SDS_MAX_PREALLOC (1024*1024)
+#define SDS_MAX_PREALLOC (1024*1024) 
+/* SDS最大分配容量为1M后，按1M扩容；之前是翻倍。 */
 
 #include <sys/types.h>
-#include <stdarg.h>
+#include <stdarg.h> /* 变长参数 */
 
 typedef char *sds;
 
 struct sdshdr {
-    int len;
-    int free;
-    char buf[];
+    int len; // 实际长度，获取长度O(1)
+    int free; // 空闲长度
+    char buf[]; // 存储
 };
 
 static inline size_t sdslen(const sds s) {
