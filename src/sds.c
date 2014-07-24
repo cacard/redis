@@ -54,7 +54,7 @@ sds sdsnewlen(const void *init, size_t initlen) {
     if (init) {
         sh = zmalloc(sizeof(struct sdshdr)+initlen+1);
     } else {
-        sh = zcalloc(sizeof(struct sdshdr)+initlen+1);
+        sh = zcalloc(sizeof(struct sdshdr)+initlen+1); // 初始化为0
     }
     if (sh == NULL) return NULL;
     sh->len = initlen;
@@ -62,7 +62,7 @@ sds sdsnewlen(const void *init, size_t initlen) {
     if (initlen && init)
         memcpy(sh->buf, init, initlen);
     sh->buf[initlen] = '\0';
-    return (char*)sh->buf;
+    return (char*)sh->buf; // 返回的是buf[]的地址。即sds类型指向的是char buf[]。
 }
 
 /* Create an empty (zero length) sds string. Even in this case the string
@@ -126,6 +126,8 @@ void sdsclear(sds s) {
  *
  * Note: this does not change the *length* of the sds string as returned
  * by sdslen(), but only the free buffer space we have. */
+ /* 扩容
+ */
 sds sdsMakeRoomFor(sds s, size_t addlen) {
     struct sdshdr *sh, *newsh;
     size_t free = sdsavail(s);
